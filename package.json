@@ -1,0 +1,23 @@
+{
+  "name": "Homework12",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TrentSchneider/Homework12.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TrentSchneider/Homework12/issues"
+  },
+  "homepage": "https://github.com/TrentSchneider/Homework12#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3"
+  }
+}
