@@ -1,5 +1,9 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
+const view = require("./dbInt/view");
+const add = require("./dbInt/add");
+const update = require("./dbInt/update");
+
 function initPrompt() {
   inquirer
     .prompt([
