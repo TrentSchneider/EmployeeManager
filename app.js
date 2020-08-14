@@ -27,6 +27,63 @@ function initPrompt() {
     });
 }
 initPrompt();
-function addPrompt() {}
-function viewPrompt() {}
-function updatePrompt() {}
+function addPrompt() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "addPrompt",
+        message: "What would you like to add?",
+        choices: ["Add a department", "Add a role", "Add an employee"],
+      },
+    ])
+    .then((data) => {
+      if (data === "Add a department") {
+        addDep();
+      } else if (data === "Add a role") {
+        addRole();
+      } else if (data === "Add an employee") {
+        addEmp();
+      }
+    });
+}
+function viewPrompt() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "addPrompt",
+        message: "What would you like to view?",
+        choices: ["View a department", "View a role", "View an employee"],
+      },
+    ])
+    .then((data) => {
+      if (data === "View a department") {
+        viewDep();
+      } else if (data === "View a role") {
+        viewRole();
+      } else if (data === "View an employee") {
+        viewEmp();
+      }
+    });
+}
+function updatePrompt() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "addPrompt",
+        message: "What would you like to Update?",
+        choices: ["Update a department", "Update a role", "Update an employee"],
+      },
+    ])
+    .then((data) => {
+      if (data === "Update a department") {
+        updateDep();
+      } else if (data === "Update a role") {
+        updateRole();
+      } else if (data === "Update an employee") {
+        updateEmp();
+      }
+    });
+}
