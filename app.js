@@ -5,30 +5,28 @@ function initPrompt() {
     .prompt([
       {
         type: "list",
-        name: "",
-        message: "",
-        choices: ["", ""],
-      },
-      {
-        type: "list",
-        name: "",
-        message: "",
-        choices: ["", "", ""],
-        when: (answers) => answers.addNew === "",
-      },
-      {
-        type: "input",
-        name: "",
-        message: "",
-        when: (answers) => answers.addNew === "",
-        validate: (answer) => {
-          if (answer !== "") {
-            return true;
-          }
-          return "";
-        },
+        name: "initialPrompt",
+        message: "What would you like to do?",
+        choices: ["Add a record", "View a record", "Update a record", "Exit"],
       },
     ])
-    .then((data) => {});
+    .then((data) => {
+      if (data === "Add a record") {
+        console.clear();
+        addPrompt();
+      } else if (data === "View a record") {
+        console.clear();
+        viewPrompt();
+      } else if (data === "Update a record") {
+        console.clear();
+        updatePrompt();
+      } else if (data === "Exit") {
+        console.log("Exiting now");
+        setTimeout(() => console.clear), 3000;
+      }
+    });
 }
 initPrompt();
+function addPrompt() {}
+function viewPrompt() {}
+function updatePrompt() {}
