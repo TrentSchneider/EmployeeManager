@@ -50,12 +50,10 @@ function addDep() {
   });
 }
 function addRole(deps) {
-  console.log(deps);
   let choice = [];
   for (let i = 0; i < deps.length; i++) {
     choice.push(deps[i].name);
   }
-  console.log(choice);
   inquirer
     .prompt([
       {
@@ -91,14 +89,15 @@ function addRole(deps) {
       connection.connect((err) => {
         if (err) throw err;
         connection.query(
-          "SELECT id FROM departments WHERE name = " + answer.name,
+          "SELECT id FROM departments WHERE name = ?",
+          [answer.department],
           function (err, depID) {
             connection.query(
               "INSERT INTO roles SET ?",
               {
                 title: answer.title,
                 salary: answer.salary,
-                department_id: depID,
+                department_id: depID[0].id,
               },
               function (err, res) {
                 if (err) throw err;
@@ -116,9 +115,18 @@ function addRole(deps) {
     });
 }
 
-function addEmp() {
+function addEmp(role, manager) {
   connection.connect((err) => {
     if (err) throw err;
+    let manChoi = [];
+    for (let i = 0; i < manager.length; i++) {
+      manChoi.push(manager[i].first_name + " " + manager[i].last_name);
+    }
+    let roChoi = [];
+    for (let i = 0; i < role.length; i++) {
+      roChoi.push(role[i].title);
+    }
+
     inquirer
       .prompt([
         {
@@ -145,64 +153,59 @@ function addEmp() {
         },
         {
           type: "list",
-          name: "department",
-          message: "Please select which department this employee belongs to.",
-          choices: depchoice(),
+          name: "role",
+          message: "Please select which role this employee belongs to.",
+          choices: roChoi,
         },
         {
           type: "list",
-          name: "role",
-          message: "Please select which role this employee belongs to.",
-          choices: function () {
-            let depID;
-            connection.query(
-              "SELECT * FROM departments WHERE name = " + answer.department,
-              function (err, res) {
-                if (err) throw err;
-                depID = res.id;
-              }
-            );
-            connection.query(
-              "SELECT * FROM roles WHERE department_id = " + depID,
-              function (err, results) {
-                if (err) throw err;
-                let choiceArray = [];
-                for (let i = 0; i < results.length; i++) {
-                  choiceArray.push(results[i].name);
-                }
-                return choiceArray;
-              }
-            );
-          },
+          name: "manager",
+          message: "Please select the employee's manager.",
+          choices: manChoi,
         },
       ])
       .then((answer) => {
+        let splitter = answer.manager;
+        let manArray = splitter.split(" ");
         connection.query(
-          "INSERT INTO employees SET ?",
-          {
-            first_name: answer.first,
-            last_name: answer.last,
-            role_id: connection.query(
-              "SELECT id FROM role WHERE title = " + answer.role,
-              function (err, res) {
-                if (err) throw err;
-                return res;
-              }
-            ),
-          },
-          function (err, res) {
+          "SELECT id FROM roles WHERE title = ?",
+          [answer.role],
+          function (err, role) {
             if (err) throw err;
-            console.log(
-              "Added " + answer.first + " " + answer.last + " to employees."
+            connection.query(
+              "SELECT id FROM employees WHERE first_name = ? AND last_name = ?",
+              [manArray[0], manArray[1]],
+              function (err, manage) {
+                if (err) throw err;
+                connection.query(
+                  "INSERT INTO employees SET ?",
+                  {
+                    first_name: answer.first,
+                    last_name: answer.last,
+                    role_id: role[0].id,
+                    manager_id: manage[0].id,
+                  },
+                  function (err, res) {
+                    if (err) throw err;
+                    console.log(
+                      "Added " +
+                        answer.first +
+                        " " +
+                        answer.last +
+                        " to employees."
+                    );
+                    connection.end();
+                    setTimeout(() => {
+                      console.clear();
+                      init.initPrompt();
+                    }, 3000);
+                  }
+                );
+              }
             );
-            setTimeout(() => {
-              console.clear;
-            }),
-              3000;
           }
         );
       });
-    connection.end();
   });
 }
 

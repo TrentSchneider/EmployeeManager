@@ -59,13 +59,21 @@ function addPrompt() {
       if (data.addPrompt == "Department") {
         add.addDep(deps);
       } else if (data.addPrompt === "Role") {
-        // TODO connection.query toss dep query then use callback function below
         connection.query("SELECT name FROM departments", function (err, deps) {
           if (err) throw err;
           add.addRole(deps);
         });
       } else if (data.addPrompt === "Employee") {
-        add.addEmp();
+        connection.query("SELECT title FROM roles", function (err, role) {
+          if (err) throw err;
+          connection.query(
+            "SELECT employees.first_name, employees.last_name, roles.title, roles.id FROM roles INNER JOIN employees ON employees.role_id = roles.id WHERE title = 'manager'",
+            function (err, manager) {
+              if (err) throw err;
+              add.addEmp(role, manager);
+            }
+          );
+        });
       }
     });
 }
