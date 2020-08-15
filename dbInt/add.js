@@ -122,6 +122,7 @@ function addEmp(role, manager) {
     for (let i = 0; i < manager.length; i++) {
       manChoi.push(manager[i].first_name + " " + manager[i].last_name);
     }
+    manChoi.unshift("None");
     let roChoi = [];
     for (let i = 0; i < role.length; i++) {
       roChoi.push(role[i].title);
@@ -183,7 +184,13 @@ function addEmp(role, manager) {
                     first_name: answer.first,
                     last_name: answer.last,
                     role_id: role[0].id,
-                    manager_id: manage[0].id,
+                    manager_id: () => {
+                      if (answer.manager === "None") {
+                        return null;
+                      } else {
+                        manage[0].id;
+                      }
+                    },
                   },
                   function (err, res) {
                     if (err) throw err;
