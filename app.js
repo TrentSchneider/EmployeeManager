@@ -1,9 +1,20 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
+const mysql = require("mysql");
+const DB_PW = require("./db_pw");
 const view = require("./dbInt/view");
 const add = require("./dbInt/add");
 const update = require("./dbInt/update");
 
+const connection = mysql.createConnection({
+  host: "localhost",
+
+  port: 3306,
+
+  user: "root",
+
+  password: DB_PW,
+  database: "employee_db",
+});
 function initPrompt() {
   inquirer
     .prompt([
@@ -15,18 +26,21 @@ function initPrompt() {
       },
     ])
     .then((data) => {
-      if (data === "Add a record") {
+      if (data.initialPrompt === "Add a record") {
         console.clear();
         addPrompt();
-      } else if (data === "View a record") {
+      } else if (data.initialPrompt === "View a record") {
         console.clear();
         viewPrompt();
-      } else if (data === "Update a record") {
+      } else if (data.initialPrompt === "Update a record") {
         console.clear();
         updatePrompt();
-      } else if (data === "Exit") {
+      } else if (data.initialPrompt === "Exit") {
         console.log("Exiting now");
-        setTimeout(() => console.clear), 3000;
+        setTimeout(() => {
+          console.clear();
+          process.exit();
+        }, 1000);
       }
     });
 }
@@ -38,16 +52,20 @@ function addPrompt() {
         type: "list",
         name: "addPrompt",
         message: "What would you like to add?",
-        choices: ["Add a department", "Add a role", "Add an employee"],
+        choices: ["Department", "Role", "Employee"],
       },
     ])
     .then((data) => {
-      if (data === "Add a department") {
-        addDep();
-      } else if (data === "Add a role") {
-        addRole();
-      } else if (data === "Add an employee") {
-        addEmp();
+      if (data.addPrompt == "Department") {
+        add.addDep(deps);
+      } else if (data.addPrompt === "Role") {
+        // TODO connection.query toss dep query then use callback function below
+        connection.query("SELECT name FROM departments", function (err, deps) {
+          if (err) throw err;
+          add.addRole(deps);
+        });
+      } else if (data.addPrompt === "Employee") {
+        add.addEmp();
       }
     });
 }
@@ -91,3 +109,5 @@ function updatePrompt() {
       }
     });
 }
+
+module.exports.initPrompt = initPrompt;

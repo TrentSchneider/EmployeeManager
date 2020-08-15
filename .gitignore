@@ -104,3 +104,4 @@ dist
 .tern-port
 
 package-lock.json
+db_pw.js

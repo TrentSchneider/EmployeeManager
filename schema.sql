@@ -33,5 +33,15 @@ INSERT INTO roles(title, salary, department_id)
 VALUES ("Manager", 75000, 1);
 INSERT INTO employees(first_name, last_name, role_id)
 VALUE ("John", "Smith", 1);
+INSERT INTO roles(title, salary, department_id)
+VALUES ("Supervisor", 45000, 1);
+INSERT INTO employees(first_name, last_name, role_id)
+VALUES ("Tom", "David", 2);
 
-SELECT * FROM departments;
+SELECT * FROM employees;
+
+SELECT employees.id, employees.first_name, roles.title
+FROM employees
+INNER JOIN roles
+ON employees.role_id = roles.id
+WHERE department_id = 1 AND role_id != 1;
