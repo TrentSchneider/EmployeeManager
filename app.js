@@ -4,6 +4,7 @@ const DB_PW = require("./db_pw");
 const view = require("./dbInt/view");
 const add = require("./dbInt/add");
 const update = require("./dbInt/update");
+const cons = require("console.table");
 
 const connection = mysql.createConnection({
   host: "localhost",
