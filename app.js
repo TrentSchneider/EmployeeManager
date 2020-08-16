@@ -72,7 +72,7 @@ function addPrompt() {
         connection.query("SELECT title FROM roles", function (err, role) {
           if (err) throw err;
           connection.query(
-            "SELECT employees.first_name, employees.last_name, roles.title, roles.id FROM roles INNER JOIN employees ON employees.role_id = roles.id WHERE title = 'manager'",
+            "SELECT employees.first_name, employees.last_name FROM employees",
             function (err, manager) {
               if (err) throw err;
               add.addEmp(role, manager);

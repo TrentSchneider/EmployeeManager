@@ -158,6 +158,8 @@ function addEmp(role, manager) {
     .then((answer) => {
       let splitter = answer.manager;
       let manArray = splitter.split(" ");
+      let manID;
+
       connection.query(
         "SELECT id FROM roles WHERE title = ?",
         [answer.role],
@@ -168,19 +170,18 @@ function addEmp(role, manager) {
             [manArray[0], manArray[1]],
             function (err, manage) {
               if (err) throw err;
+              if (answer.manager === "None") {
+                manID = null;
+              } else {
+                manID = manage[0].id;
+              }
               connection.query(
                 "INSERT INTO employees SET ?",
                 {
                   first_name: answer.first,
                   last_name: answer.last,
                   role_id: role[0].id,
-                  manager_id: () => {
-                    if (answer.manager === "None") {
-                      return null;
-                    } else {
-                      manage[0].id;
-                    }
-                  },
+                  manager_id: manID,
                 },
                 function (err, res) {
                   if (err) throw err;
