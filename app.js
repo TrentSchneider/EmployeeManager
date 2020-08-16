@@ -16,6 +16,10 @@ const connection = mysql.createConnection({
   password: DB_PW,
   database: "employee_db",
 });
+connection.connect((err) => {
+  if (err) throw err;
+  initPrompt();
+});
 function initPrompt() {
   inquirer
     .prompt([
@@ -37,6 +41,7 @@ function initPrompt() {
         console.clear();
         updatePrompt();
       } else if (data.initialPrompt === "Exit") {
+        connection.end();
         console.log("Exiting now");
         setTimeout(() => {
           console.clear();
@@ -45,7 +50,6 @@ function initPrompt() {
       }
     });
 }
-initPrompt();
 function addPrompt() {
   inquirer
     .prompt([
@@ -58,7 +62,7 @@ function addPrompt() {
     ])
     .then((data) => {
       if (data.addPrompt == "Department") {
-        add.addDep(deps);
+        add.addDep();
       } else if (data.addPrompt === "Role") {
         connection.query("SELECT name FROM departments", function (err, deps) {
           if (err) throw err;
@@ -83,18 +87,22 @@ function viewPrompt() {
     .prompt([
       {
         type: "list",
-        name: "addPrompt",
+        name: "viewPrompt",
         message: "What would you like to view?",
-        choices: ["View a department", "View a role", "View an employee"],
+        choices: [
+          "View all departments",
+          "View all roles",
+          "View all employees",
+        ],
       },
     ])
     .then((data) => {
-      if (data === "View a department") {
-        viewDep();
-      } else if (data === "View a role") {
-        viewRole();
-      } else if (data === "View an employee") {
-        viewEmp();
+      if (data.viewPrompt === "View all departments") {
+        view.viewDep();
+      } else if (data.viewPrompt === "View all roles") {
+        view.viewRole();
+      } else if (data.viewPrompt === "View all employees") {
+        view.viewEmp();
       }
     });
 }
