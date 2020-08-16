@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
   password: DB_PW,
   database: "employee_db",
 });
-
+// TODO add update functionality
 function upEmpRole() {}
 function upEmpMan() {}
 

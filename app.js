@@ -5,7 +5,7 @@ const view = require("./dbInt/view");
 const add = require("./dbInt/add");
 const update = require("./dbInt/update");
 const cons = require("console.table");
-
+// TODO add additional functionality
 const connection = mysql.createConnection({
   host: "localhost",
 
