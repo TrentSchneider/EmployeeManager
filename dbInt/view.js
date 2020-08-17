@@ -75,7 +75,30 @@ function viewEmp() {
     }
   );
 }
+function viewEmpByMan() {
+  connection.query(
+    "SELECT CONCAT(b.first_name,' ',b.last_name) as Manager, a.id AS ID, a.first_name AS 'First Name', a.last_name AS 'Last Name', roles.title AS Title, departments.name AS Department, roles.salary AS Salary FROM employees a INNER JOIN roles ON a.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id LEFT JOIN employees b ON a.manager_id = b.id ORDER BY b.last_name, b.first_name",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "exit",
+            message: "Exit view?",
+            choices: ["Yes"],
+          },
+        ])
+        .then(() => {
+          console.clear();
+          init.initPrompt();
+        });
+    }
+  );
+}
 
 module.exports.viewDep = viewDep;
 module.exports.viewRole = viewRole;
 module.exports.viewEmp = viewEmp;
+module.exports.viewEmpByMan = viewEmpByMan;

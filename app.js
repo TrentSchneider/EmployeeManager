@@ -92,6 +92,7 @@ function viewPrompt() {
           "View all departments",
           "View all roles",
           "View all employees",
+          "View all employees by manager",
         ],
       },
     ])
@@ -102,6 +103,8 @@ function viewPrompt() {
         view.viewRole();
       } else if (data.viewPrompt === "View all employees") {
         view.viewEmp();
+      } else if (data.viewPrompt === "View all employees by manager") {
+        view.viewEmpByMan();
       }
     });
 }

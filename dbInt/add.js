@@ -20,7 +20,7 @@ function addDep() {
       {
         type: "input",
         name: "name",
-        message: "Please add department name",
+        message: "Please add department name:",
         validate: (answer) => {
           if (answer !== "") {
             return true;
@@ -55,7 +55,7 @@ function addRole(deps) {
       {
         type: "input",
         name: "title",
-        message: "Please add the role's title.",
+        message: "Please add the role's title:",
         validate: (answer) => {
           if (answer !== "") {
             return true;
@@ -66,7 +66,7 @@ function addRole(deps) {
       {
         type: "input",
         name: "salary",
-        message: "Please add the role's salary.",
+        message: "Please add the role's salary:",
         validate: (answer) => {
           if (isNaN(answer) || answer === "") {
             return "Please make sure a salary is entered.";
@@ -77,7 +77,7 @@ function addRole(deps) {
       {
         type: "list",
         name: "department",
-        message: "Please select which department this role belongs to.",
+        message: "Please select which department this role belongs to:",
         choices: choice,
       },
     ])
@@ -123,7 +123,7 @@ function addEmp(role, manager) {
       {
         type: "input",
         name: "first",
-        message: "Please add employee's first name",
+        message: "Please add employee's first name:",
         validate: (answer) => {
           if (answer !== "") {
             return true;
@@ -134,7 +134,7 @@ function addEmp(role, manager) {
       {
         type: "input",
         name: "last",
-        message: "Please add employee's last name",
+        message: "Please add employee's last name:",
         validate: (answer) => {
           if (answer !== "") {
             return true;
@@ -145,13 +145,13 @@ function addEmp(role, manager) {
       {
         type: "list",
         name: "role",
-        message: "Please select which role this employee belongs to.",
+        message: "Please select the employee's role:",
         choices: roChoi,
       },
       {
         type: "list",
         name: "manager",
-        message: "Please select the employee's manager.",
+        message: "Please select the employee's manager:",
         choices: manChoi,
       },
     ])
