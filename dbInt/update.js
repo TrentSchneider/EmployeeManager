@@ -13,8 +13,7 @@ const connection = mysql.createConnection({
   password: DB_PW,
   database: "employee_db",
 });
-// TODO add update functionality
-function upEmpRole(emps, ro) {
+function upEmpRole(emps, ro, ma) {
   let empChoi = [];
   for (let i = 0; i < emps.length; i++) {
     empChoi.push(emps[i].first_name + " " + emps[i].last_name);
@@ -23,6 +22,11 @@ function upEmpRole(emps, ro) {
   for (let i = 0; i < ro.length; i++) {
     roChoi.push(ro[i].title);
   }
+  let manChoi = [];
+  for (let i = 0; i < ma.length; i++) {
+    manChoi.push(ma[i].first_name + " " + ma[i].last_name);
+  }
+  manChoi.unshift("None");
   inquirer
     .prompt([
       {
@@ -35,33 +39,51 @@ function upEmpRole(emps, ro) {
         type: "list",
         name: "updatePrompt",
         message: "What information would you like to update?",
-        choices: ["Role"],
+        choices: ["Role", "Manager"],
       },
       {
         type: "list",
         name: "updateInfo",
         message: "Please select new role:",
         choices: roChoi,
-        when: (answers) => (answers.updatePrompt = "Role"),
+        when: (answers) => answers.updatePrompt === "Role",
+      },
+      {
+        type: "list",
+        name: "updateInfo",
+        message: "Please select new manager:",
+        choices: manChoi,
+        when: (answers) => answers.updatePrompt === "Manager",
       },
     ])
     .then((answers) => {
       let splitter = answers.empPrompt;
       let empArray = splitter.split(" ");
-      let queryChoi;
       let query;
+      let queryUp;
+      let queryQs;
       if (answers.updatePrompt === "Role") {
         queryUp = "role_id";
         query = "SELECT id FROM roles WHERE ?";
+        queryQs = [{ title: answers.updateInfo }];
+      } else if (answers.updatePrompt === "Manager") {
+        let manSplit = answers.updateInfo;
+        let manArray = manSplit.split(" ");
+        queryUp = "manager_id";
+        query = "SELECT id FROM employees WHERE ? AND ?";
+        queryQs = [{ first_name: manArray[0] }, { last_name: manArray[1] }];
       }
-      connection.query(query, [{ title: answers.updateInfo }], function (
-        err,
-        upID
-      ) {
+      connection.query(query, queryQs, function (err, upID) {
         if (err) throw err;
         if (answers.updatePrompt === "Role") {
           queryArray = [
             { role_id: upID[0].id },
+            { first_name: empArray[0] },
+            { last_name: empArray[1] },
+          ];
+        } else if (answers.updatePrompt === "Manager") {
+          queryArray = [
+            { manager_id: upID[0].id },
             { first_name: empArray[0] },
             { last_name: empArray[1] },
           ];
@@ -76,7 +98,8 @@ function upEmpRole(emps, ro) {
                 answers.updatePrompt +
                 " of " +
                 splitter +
-                " has been updated."
+                " has been updated to " +
+                answers.updateInfo
             );
             setTimeout(() => {
               console.clear();

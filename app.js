@@ -5,7 +5,6 @@ const view = require("./dbInt/view");
 const add = require("./dbInt/add");
 const update = require("./dbInt/update");
 const cons = require("console.table");
-// TODO add additional functionality
 const connection = mysql.createConnection({
   host: "localhost",
 
@@ -122,7 +121,13 @@ function updatePrompt() {
           if (err) throw err;
           connection.query("SELECT * FROM roles", (err, ro) => {
             if (err) throw err;
-            update.upEmpRole(emps, ro);
+            connection.query(
+              "SELECT employees.first_name, employees.last_name FROM employees",
+              function (err, ma) {
+                if (err) throw err;
+                update.upEmpRole(emps, ro, ma);
+              }
+            );
           });
         });
       }
