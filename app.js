@@ -27,17 +27,17 @@ function initPrompt() {
         type: "list",
         name: "initialPrompt",
         message: "What would you like to do?",
-        choices: ["Add a record", "View a record", "Update a record", "Exit"],
+        choices: ["Add records", "View records", "Update records", "Exit"],
       },
     ])
     .then((data) => {
-      if (data.initialPrompt === "Add a record") {
+      if (data.initialPrompt === "Add records") {
         console.clear();
         addPrompt();
-      } else if (data.initialPrompt === "View a record") {
+      } else if (data.initialPrompt === "View records") {
         console.clear();
         viewPrompt();
-      } else if (data.initialPrompt === "Update a record") {
+      } else if (data.initialPrompt === "Update records") {
         console.clear();
         updatePrompt();
       } else if (data.initialPrompt === "Exit") {
@@ -111,18 +111,20 @@ function updatePrompt() {
     .prompt([
       {
         type: "list",
-        name: "addPrompt",
+        name: "updatePrompt",
         message: "What would you like to Update?",
-        choices: ["Update a department", "Update a role", "Update an employee"],
+        choices: ["Update an employee"],
       },
     ])
     .then((data) => {
-      if (data === "Update a department") {
-        updateDep();
-      } else if (data === "Update a role") {
-        updateRole();
-      } else if (data === "Update an employee") {
-        updateEmp();
+      if (data.updatePrompt === "Update an employee") {
+        connection.query("SELECT * FROM employees", (err, emps) => {
+          if (err) throw err;
+          connection.query("SELECT * FROM roles", (err, ro) => {
+            if (err) throw err;
+            update.upEmpRole(emps, ro);
+          });
+        });
       }
     });
 }
