@@ -16,7 +16,10 @@ const connection = mysql.createConnection({
 });
 
 function viewDep() {
-  connection.query("SELECT * FROM departments", function (err, res) {
+  connection.query("SELECT id AS ID, name AS Name FROM departments", function (
+    err,
+    res
+  ) {
     if (err) throw err;
     console.table(res);
     inquirer
@@ -35,23 +38,26 @@ function viewDep() {
   });
 }
 function viewRole() {
-  connection.query("SELECT * FROM roles", function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "exit",
-          message: "Exit view?",
-          choices: ["Yes"],
-        },
-      ])
-      .then(() => {
-        console.clear();
-        init.initPrompt();
-      });
-  });
+  connection.query(
+    "SELECT roles.id AS ID, roles.title AS Title, roles.salary AS Salary, departments.name AS Department FROM roles INNER JOIN departments ON roles.department_id = departments.id;",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "exit",
+            message: "Exit view?",
+            choices: ["Yes"],
+          },
+        ])
+        .then(() => {
+          console.clear();
+          init.initPrompt();
+        });
+    }
+  );
 }
 function viewEmp() {
   connection.query(
