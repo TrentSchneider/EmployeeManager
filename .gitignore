@@ -105,3 +105,4 @@ dist
 
 package-lock.json
 db_pw.js
+.DS_Store
